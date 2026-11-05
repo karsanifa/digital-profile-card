@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:digital_profile_card/services/pref_service.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.prefs});
+  final PrefService prefs;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -297,6 +299,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    const SizedBox(height: 24),
+Center(
+  child: Text(
+    'Kartu ini sudah dibuka ${widget.prefs.openCount} kali',
+    style: Theme.of(context).textTheme.bodySmall,
+  ),
+),
 
                     // Baris Tombol Interaktif
                     Row(
@@ -317,7 +326,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 10),
                         IconButton(
                           onPressed: _showCommentDialog,
                           icon: Icon(Icons.comment, color: Colors.grey[700]),
