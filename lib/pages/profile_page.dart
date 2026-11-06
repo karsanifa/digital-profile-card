@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:digital_profile_card/services/pref_service.dart';
+import '../services/pref_service.dart'; // Import relatif dari folder pages/
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.prefs});
+  const ProfilePage({
+    super.key,
+    required this.prefs,
+    required this.isDark,
+    required this.onThemeChanged,
+  });
+
   final PrefService prefs;
+  final bool isDark;
+  final ValueChanged<bool> onThemeChanged;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -131,6 +139,15 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text('Digital Profile Card'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(
+              widget.isDark ? Icons.dark_mode : Icons.light_mode,
+            ),
+            onPressed: () => widget.onThemeChanged(!widget.isDark),
+            tooltip: 'Toggle Theme',
+          ),
+        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -298,14 +315,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const SizedBox(height: 24),
-Center(
-  child: Text(
-    'Kartu ini sudah dibuka ${widget.prefs.openCount} kali',
-    style: Theme.of(context).textTheme.bodySmall,
-  ),
-),
+                    const SizedBox(height: 16),
+
+                    // Mengakses prefs lewat widget.prefs
+                    Center(
+                      child: Text(
+                        'Kartu ini sudah dibuka ${widget.prefs.openCount} kali',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
 
                     // Baris Tombol Interaktif
                     Row(
@@ -326,6 +345,7 @@ Center(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const SizedBox(width: 10),
                         IconButton(
                           onPressed: _showCommentDialog,
                           icon: Icon(Icons.comment, color: Colors.grey[700]),
