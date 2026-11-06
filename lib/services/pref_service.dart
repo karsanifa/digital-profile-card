@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/profile_data.dart';
 
 class PrefService {
   final SharedPreferences _prefs;
@@ -7,23 +8,41 @@ class PrefService {
 
   static const String _kOpenCount = 'open_count';
   static const String _kDarkMode = 'is_dark_mode';
+  static const String _kProfile = 'profile_data';
 
   static Future<PrefService> init() async {
     final prefs = await SharedPreferences.getInstance();
     return PrefService(prefs);
   }
 
-  // Getter & Setter untuk Open Count
+  // Open Count
   int get openCount => _prefs.getInt(_kOpenCount) ?? 0;
 
   Future<void> incrementOpenCount() async {
     await _prefs.setInt(_kOpenCount, openCount + 1);
   }
 
-  // Getter & Setter untuk Dark Mode
+  // Dark Mode
   bool get isDarkMode => _prefs.getBool(_kDarkMode) ?? false;
 
   Future<void> setDarkMode(bool value) async {
     await _prefs.setBool(_kDarkMode, value);
   }
+
+  // ---------- Profil ----------
+  ProfileData get profile {
+    final raw = _prefs.getString(_kProfile);
+    if (raw == null) return ProfileData.defaults;
+    try {
+      return ProfileData.fromJson(raw);
+    } catch (_) {
+      // Data rusak? Kembali ke nilai default
+      return ProfileData.defaults;
+    }
+  }
+
+  Future<void> saveProfile(ProfileData profile) =>
+      _prefs.setString(_kProfile, profile.toJson());
+
+  Future<void> clearProfile() => _prefs.remove(_kProfile);
 }
