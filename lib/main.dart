@@ -5,6 +5,10 @@ import 'pages/profile_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await PrefService.init();
+
+  // Inspeksi isi key SharedPreferences di Debug Console
+  debugPrint('Isi prefs: ${prefs.debugKeys}');
+
   runApp(MyApp(prefs: prefs));
 }
 
@@ -48,7 +52,7 @@ class _MyAppState extends State<MyApp> {
           home: ProfilePage(
             prefs: widget.prefs,
             isDark: isDark,
-            onThemeChanged: _toggleTheme, // Menggunakan _toggleTheme
+            onThemeChanged: _toggleTheme,
           ),
         );
       },

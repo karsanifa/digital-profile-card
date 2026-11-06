@@ -15,6 +15,9 @@ class PrefService {
     return PrefService(prefs);
   }
 
+  // Debugging Helper
+  Set<String> get debugKeys => _prefs.getKeys();
+
   // Open Count
   int get openCount => _prefs.getInt(_kOpenCount) ?? 0;
 
@@ -36,7 +39,6 @@ class PrefService {
     try {
       return ProfileData.fromJson(raw);
     } catch (_) {
-      // Data rusak? Kembali ke nilai default
       return ProfileData.defaults;
     }
   }

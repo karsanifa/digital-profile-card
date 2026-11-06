@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _profile = widget.prefs.profile; // baca data tersimpan
+    _profile = widget.prefs.profile;
   }
 
   Future<void> _edit() async {
@@ -33,13 +33,22 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(builder: (_) => EditProfilePage(initial: _profile)),
     );
-    if (result == null) return; // pengguna menekan tombol back
+    if (result == null) return;
 
     await widget.prefs.saveProfile(result);
     if (!mounted) return;
     setState(() => _profile = result);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profil tersimpan')),
+    );
+  }
+
+  Future<void> _reset() async {
+    await widget.prefs.clearProfile();
+    if (!mounted) return;
+    setState(() => _profile = widget.prefs.profile);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profil dikembalikan ke bawaan')),
     );
   }
 
@@ -90,6 +99,12 @@ class _ProfilePageState extends State<ProfilePage> {
             title: const Text('Mode Gelap'),
             value: widget.isDark,
             onChanged: widget.onThemeChanged,
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            onPressed: _reset,
+            icon: const Icon(Icons.restore),
+            label: const Text('Reset Profil'),
           ),
           const SizedBox(height: 24),
           Center(
